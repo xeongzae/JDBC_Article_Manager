@@ -16,16 +16,12 @@ public class ArticleService {
 		this.articleDao = new ArticleDao(conn);
 	}
 
-	public void writeArticle(String title, String body) {
-		articleDao.writeArticle(title, body);
+	public int writeArticle(int loginedMemberId, String title, String body) {
+		return articleDao.writeArticle(loginedMemberId, title, body);
 	}
 
-	public int getLastInsertId() {
-		return articleDao.getLastInsertId();
-	}
-	
-	public List<Article> getArticles() {
-		List<Map<String, Object>> articleListMap = articleDao.getArticles();
+	public List<Article> getArticles(String searchKeyword) {
+		List<Map<String, Object>> articleListMap = articleDao.getArticles(searchKeyword);
 		
 		List<Article> articles = new ArrayList<>();
 		
@@ -46,16 +42,18 @@ public class ArticleService {
 		return new Article(articleMap);
 	}
 
-	public int getArticleCnt(int id) {
-		return articleDao.getArticleCnt(id);
+	public Article getArticleById(int id) {
+		Map<String, Object> articleMap = articleDao.getArticleById(id);
+		
+		if (articleMap.isEmpty()) {
+			return null;
+		}
+		
+		return new Article(articleMap);
 	}
 
 	public void modifyArticle(int id, String title, String body) {
 		articleDao.modifyArticle(id, title, body);
-	}
-
-	public boolean isExists(int id) {
-		return articleDao.isExists(id);
 	}
 
 	public void deleteArticle(int id) {
@@ -72,5 +70,9 @@ public class ArticleService {
 		}
         
 		return id;
+	}
+
+	public int increaseVCnt(int id) {
+		return articleDao.increaseVCnt(id);
 	}
 }
